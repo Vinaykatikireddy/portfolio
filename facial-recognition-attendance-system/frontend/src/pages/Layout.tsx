@@ -73,7 +73,7 @@ if (
   location.pathname !== "/login" &&
   location.pathname !== "/register"
 ) {
-  return <Navigate to="/login" replace />
+  return <Navigate to="/fras/login" replace />
 }
 
   return (
