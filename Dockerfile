@@ -1,34 +1,61 @@
-# FRAS frontend
+# -----------------------------
+# FRAS Frontend Builder
+# -----------------------------
 FROM node:20-alpine AS fras-frontend-builder
-WORKDIR /app/fras-frontend
-COPY facial-recognition-attendance-system/frontend/package*.json ./
+
+RUN apk add --no-cache git
+
+WORKDIR /app
+
+# Clone Face Recognition project
+RUN git clone --depth 1 https://github.com/vinaykatikireddy/facial-recognition-attendance-system.git
+
+WORKDIR /app/facial-recognition-attendance-system/frontend
+
 RUN npm ci
-COPY facial-recognition-attendance-system/frontend/ .
 RUN npm run build
 
 
-# Final multi-service image
+# -----------------------------
+# Final Image
+# -----------------------------
 FROM python:3.11-slim
+
 WORKDIR /app
 
-# Install NGINX, Supervisor, and dependencies
-RUN apt-get update && apt-get install -y nginx supervisor curl libxcb1 libxext6 libsm6 libxrender1 ffmpeg libgl1 && rm -rf /var/lib/apt/lists/*
+# Install system packages
+RUN apt-get update && apt-get install -y \
+    git \
+    nginx \
+    supervisor \
+    curl \
+    libxcb1 \
+    libxext6 \
+    libsm6 \
+    libxrender1 \
+    ffmpeg \
+    libgl1 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Python requirements
-COPY facial-recognition-attendance-system/backend/requirements.txt .
-RUN pip install -r requirements.txt
+# Clone Face Recognition project
+RUN git clone --depth 1 https://github.com/vinaykatikireddy/facial-recognition-attendance-system.git
 
-# Blog
-COPY blog/ ./blog
+# Clone Portfolio and rename folder
+RUN git clone --depth 1 https://github.com/vinaykatikireddy/vinaykatikireddy.git portfolio
 
-# Portfolio
-COPY portfolio/ ./portfolio
+# Install Python dependencies
+RUN pip install --no-cache-dir -r /app/facial-recognition-attendance-system/backend/requirements.txt
 
-# Copy built applications
-COPY facial-recognition-attendance-system/backend/ /opt/fras-backend
-COPY --from=fras-frontend-builder /app/fras-frontend/dist /var/www/fras
+# Copy blog from this repository
+COPY blog/ /app/blog/
 
-# Copy NGINX and Supervisor configs
+# Copy backend
+COPY --from=0 /app/facial-recognition-attendance-system/backend /opt/fras-backend
+
+# Copy built frontend
+COPY --from=fras-frontend-builder app/facial-recognition-attendance-system/frontend/dist /var/www/fras
+
+# Copy configuration files
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
@@ -36,5 +63,4 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 EXPOSE 80
 EXPOSE 7860
 
-# Start Supervisor
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
