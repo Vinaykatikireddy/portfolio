@@ -1,64 +1,443 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog | Vinay</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<title>Vinay • Blog</title>
+<meta name="description" content="A modern markdown-powered personal blog.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0f172a">
 
-    <style>
-        body {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            line-height: 1.7;
-            background: #111;
-            color: #eee;
-        }
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-        img {
-            max-width: 100%;
-            border-radius: 8px;
-        }
+<style>
+:root{
+    --bg:#09090b;
+    --surface:#18181b;
+    --surface2:#27272a;
+    --border:#30363d;
+    --text:#f4f4f5;
+    --muted:#9ca3af;
+    --accent:#4f8cff;
+    --accent2:#8b5cf6;
+    --shadow:0 20px 60px rgba(0,0,0,.45);
+    --radius:18px;
+    --max:860px;
+    --mono:ui-monospace,SFMono-Regular,Consolas,monospace;
+    --sans:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
 
-        a {
-            color: #4da6ff;
-        }
+@media (prefers-color-scheme: light){
+:root{
+    --bg:#f8fafc;
+    --surface:#ffffff;
+    --surface2:#f3f4f6;
+    --border:#e5e7eb;
+    --text:#111827;
+    --muted:#6b7280;
+    --accent:#2563eb;
+    --accent2:#7c3aed;
+    --shadow:0 15px 40px rgba(0,0,0,.08);
+}
+}
 
-        pre {
-            background: #222;
-            padding: 15px;
-            overflow-x: auto;
-            border-radius: 8px;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-        code {
-            font-family: monospace;
-        }
-    </style>
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:
+    radial-gradient(circle at top right,#3b82f615,transparent 35%),
+    radial-gradient(circle at bottom left,#8b5cf615,transparent 35%),
+    var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.8;
+}
+
+.container{
+    max-width:var(--max);
+    margin:auto;
+    padding:32px 20px 80px;
+}
+
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:40px;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.logo{
+    text-decoration:none;
+    color:inherit;
+}
+
+.logo h1{
+    font-size:2rem;
+    letter-spacing:-1px;
+}
+
+.logo p{
+    color:var(--muted);
+    margin-top:6px;
+}
+
+nav{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+nav a{
+    text-decoration:none;
+    color:var(--muted);
+    transition:.2s;
+    font-weight:600;
+}
+
+nav a:hover{
+    color:var(--accent);
+}
+
+.hero{
+    background:linear-gradient(135deg,var(--surface),var(--surface2));
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:40px;
+    margin-bottom:35px;
+    box-shadow:var(--shadow);
+}
+
+.hero h2{
+    font-size:2.2rem;
+    line-height:1.15;
+    margin-bottom:15px;
+}
+
+.hero p{
+    color:var(--muted);
+}
+
+.card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:40px;
+    box-shadow:var(--shadow);
+}
+
+.loading{
+    color:var(--muted);
+}
+
+#error{
+    display:none;
+    color:#ef4444;
+}
+
+article{
+    animation:fade .5s ease;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(12px);
+}
+to{
+opacity:1;
+transform:none;
+}
+}
+
+article h1,
+article h2,
+article h3,
+article h4{
+    margin-top:1.6em;
+    margin-bottom:.6em;
+    line-height:1.2;
+}
+
+article h1{
+    font-size:2.4rem;
+}
+
+article h2{
+    font-size:1.8rem;
+}
+
+article h3{
+    font-size:1.35rem;
+}
+
+article p{
+    margin:1.2em 0;
+}
+
+article img{
+    width:100%;
+    border-radius:14px;
+    margin:24px 0;
+    box-shadow:var(--shadow);
+}
+
+article a{
+    color:var(--accent);
+}
+
+article blockquote{
+    border-left:4px solid var(--accent);
+    padding:10px 20px;
+    margin:24px 0;
+    background:rgba(127,127,127,.08);
+    border-radius:10px;
+    color:var(--muted);
+}
+
+article hr{
+    border:none;
+    border-top:1px solid var(--border);
+    margin:40px 0;
+}
+
+article ul,
+article ol{
+    margin:20px 0 20px 30px;
+}
+
+article li{
+    margin:10px 0;
+}
+
+pre{
+    background:#0d1117;
+    color:#e6edf3;
+    padding:20px;
+    border-radius:14px;
+    overflow:auto;
+    margin:24px 0;
+    border:1px solid #30363d;
+}
+
+code{
+    font-family:var(--mono);
+}
+
+:not(pre)>code{
+    background:rgba(127,127,127,.15);
+    padding:.2em .45em;
+    border-radius:6px;
+    font-size:.95em;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin:24px 0;
+}
+
+th,td{
+    border:1px solid var(--border);
+    padding:12px;
+}
+
+th{
+    background:var(--surface2);
+}
+
+footer{
+    text-align:center;
+    margin-top:50px;
+    color:var(--muted);
+    font-size:.95rem;
+}
+
+.meta{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:10px;
+    margin-bottom:25px;
+    color:var(--muted);
+    font-size:.95rem;
+}
+
+.tag{
+    padding:4px 10px;
+    background:rgba(79,140,255,.12);
+    border-radius:999px;
+    color:var(--accent);
+}
+
+#progress{
+    position:fixed;
+    top:0;
+    left:0;
+    width:0%;
+    height:3px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    z-index:1000;
+}
+
+.back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    margin-bottom:25px;
+    color:var(--muted);
+    font-weight:600;
+}
+
+.back:hover{
+    color:var(--accent);
+}
+
+::selection{
+    background:var(--accent);
+    color:white;
+}
+</style>
 </head>
 <body>
 
-<h1>Blog</h1>
+<div id="progress"></div>
 
-<div id="content">Loading...</div>
+<div class="container">
+
+<header>
+
+<a class="logo" href="./">
+<h1>Vinay</h1>
+<p>Thoughts, tutorials & experiments.</p>
+</a>
+
+<nav>
+<a href="./">Home</a>
+<a href="./?post=hello-world">Latest</a>
+</nav>
+
+</header>
+
+<section class="hero">
+<h2 id="heroTitle">Loading post...</h2>
+<p id="heroSubtitle">Markdown-powered blog with a clean reading experience.</p>
+</section>
+
+<div class="card">
+
+<a class="back" href="./">
+← Home
+</a>
+
+<div id="content" class="loading">
+Loading article...
+</div>
+
+<div id="error">
+<h2>404</h2>
+<p>Sorry, this blog post could not be found.</p>
+</div>
+
+</div>
+
+<footer>
+© <span id="year"></span> Vinay • Built with HTML, CSS & Markdown
+</footer>
+
+</div>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const post = params.get("post") || "hello-world";
+marked.setOptions({
+    breaks:true,
+    gfm:true
+});
 
-fetch(`${post}.md`)
-    .then(r => r.text())
-    .then(md => {
-        document.getElementById("content").innerHTML =
-            marked.parse(md);
-    })
-    .catch(() => {
-        document.getElementById("content").innerHTML =
-            "<h2>Post not found.</h2>";
-    });
+const params=new URLSearchParams(location.search);
+const post=params.get("post") || "hello-world";
+
+document.title=post.replace(/-/g," ")+" • Vinay";
+
+async function loadPost(){
+
+try{
+
+const res=await fetch(post+".md");
+
+if(!res.ok) throw new Error();
+
+const md=await res.text();
+
+const html=marked.parse(md);
+
+const content=document.getElementById("content");
+
+content.classList.remove("loading");
+content.innerHTML=html;
+
+const h1=content.querySelector("h1");
+
+if(h1){
+document.getElementById("heroTitle").textContent=h1.textContent;
+document.title=h1.textContent+" • Vinay";
+}
+
+const firstParagraph=content.querySelector("p");
+
+if(firstParagraph){
+document.getElementById("heroSubtitle").textContent=
+firstParagraph.textContent.slice(0,140);
+}
+
+content.querySelectorAll("a").forEach(link=>{
+if(link.hostname && link.hostname!==location.hostname){
+link.target="_blank";
+link.rel="noopener noreferrer";
+}
+});
+
+content.querySelectorAll("img").forEach(img=>{
+img.loading="lazy";
+img.decoding="async";
+});
+
+}
+catch(e){
+
+document.getElementById("content").style.display="none";
+document.getElementById("error").style.display="block";
+document.getElementById("heroTitle").textContent="Post not found";
+document.getElementById("heroSubtitle").textContent="The requested article doesn't exist.";
+
+}
+
+}
+
+loadPost();
+
+document.getElementById("year").textContent=new Date().getFullYear();
+
+window.addEventListener("scroll",()=>{
+
+const winScroll=document.documentElement.scrollTop;
+const height=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+const scrolled=(winScroll/height)*100;
+
+document.getElementById("progress").style.width=scrolled+"%";
+
+});
 </script>
 
 </body>
