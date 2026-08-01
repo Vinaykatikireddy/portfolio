@@ -40,14 +40,11 @@ RUN apt-get update && apt-get install -y \
 # Clone Face Recognition project
 RUN git clone --depth 1 https://github.com/vinaykatikireddy/facial-recognition-attendance-system.git
 
-# Clone Portfolio and rename folder
-RUN git clone --depth 1 https://github.com/vinaykatikireddy/vinaykatikireddy.git portfolio
-
 # Install Python dependencies
 RUN pip install --no-cache-dir -r /app/facial-recognition-attendance-system/backend/requirements.txt
 
-# Copy blog from this repository
-COPY blog/ /app/blog/
+# Copy all from this repository
+COPY . /app/
 
 # Copy backend
 COPY --from=0 /app/facial-recognition-attendance-system/backend /opt/fras-backend
