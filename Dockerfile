@@ -1,6 +1,4 @@
-# -----------------------------
 # FRAS Frontend Builder
-# -----------------------------
 FROM node:20-alpine AS fras-frontend-builder
 
 RUN apk add --no-cache git
@@ -16,9 +14,7 @@ RUN npm ci
 RUN npm run build
 
 
-# -----------------------------
 # Final Image
-# -----------------------------
 FROM python:3.11-slim
 
 WORKDIR /app
