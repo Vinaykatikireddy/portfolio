@@ -285,7 +285,7 @@ animate();
 
 // LOGO EFFECT
 const logo = document.getElementById("logoText");
-const names = ["Vinay", '$ <span id="terminalCursor">_</span>'];
+const names = [logo.innerText, '$ <span id="terminalCursor">_</span>'];
 
 function switchLogo() {
     logo.classList.add("glitch");
