@@ -63,6 +63,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpangocairo-1.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
+# ============================================================
+# COPY APPLICATION SOURCE CODE
+# ============================================================
+
+COPY --from=fras-builder \
+    /app/facial-recognition-attendance-system \
+    /app/facial-recognition-attendance-system
+
+COPY --from=ai-vuln-builder \
+    /app/ai-web-vuln-sim \
+    /app/ai-web-vuln-sim
 
 # ============================================================
 # SETUP BACKENDS WITH VENVs
