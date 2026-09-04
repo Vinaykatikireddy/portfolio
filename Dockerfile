@@ -67,11 +67,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # COPY APPLICATION SOURCE CODE
 # ============================================================
 
-COPY --from=fras-builder \
+COPY --from=fras-frontend-builder \
     /app/facial-recognition-attendance-system \
     /app/facial-recognition-attendance-system
 
-COPY --from=ai-vuln-builder \
+COPY --from=ai-web-vuln-sim-frontend-builder \
     /app/ai-web-vuln-sim \
     /app/ai-web-vuln-sim
 
