@@ -59,7 +59,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpango1.0-dev \
     libharfbuzz-dev \
     shared-mime-info \
-    libgdk-pixbuf2.0-0 \
+    libgdk-pixbuf-xlib-2.0-0 \
     libpangocairo-1.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
