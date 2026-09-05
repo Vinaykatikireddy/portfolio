@@ -8,3 +8,4 @@ __pycache__/
 venv/
 .vite
 .vscode/
+ai-web-vuln-sim/
