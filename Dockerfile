@@ -90,12 +90,18 @@ RUN /opt/venv-fras/bin/pip install --no-cache-dir -r /app/facial-recognition-att
 
 RUN python3 -m venv /opt/venv-ai-vuln
 
-RUN /opt/venv-ai-vuln/bin/pip install --no-cache-dir poetry
+RUN /opt/venv-ai-vuln/bin/pip install --no-cache-dir --upgrade pip setuptools wheel poetry
+
+WORKDIR /app/ai-web-vuln-sim/backend
+
+ENV VIRTUAL_ENV=/opt/venv-ai-vuln
+ENV PATH="/opt/venv-ai-vuln/bin:$PATH"
 
 ENV POETRY_VIRTUALENVS_CREATE=false
-WORKDIR /app/ai-web-vuln-sim/backend
-RUN /opt/venv-ai-vuln/bin/poetry install --no-root --no-interaction --no-ansi
 
+RUN poetry install --only main --no-root --no-interaction --no-ansi
+
+RUN python -c "import uvicorn; print('uvicorn:', uvicorn.__version__)"
 
 # ============================================================
 # COPY BUILT FRONTENDS
