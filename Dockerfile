@@ -123,8 +123,7 @@ COPY blog /app/blog
 COPY static /app/static
 
 # ID Card
-RUN git clone --depth 1 https://github.com/vinaykatikireddy/college-id-card-generator college-id-card-generator
-COPY college-id-card-generator /app/static/id-card
+RUN git clone --depth 1 https://github.com/vinaykatikireddy/college-id-card-generator /app/static/id-card
 
 # ============================================================
 # PORTS
