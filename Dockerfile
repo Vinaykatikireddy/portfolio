@@ -118,6 +118,9 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# BLOG and STATIC files
+COPY blog /app/blog
+COPY static /app/static
 
 # ============================================================
 # PORTS
