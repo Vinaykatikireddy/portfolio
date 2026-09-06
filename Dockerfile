@@ -101,8 +101,6 @@ ENV POETRY_VIRTUALENVS_CREATE=false
 
 RUN poetry install --only main --no-root --no-interaction --no-ansi
 
-RUN python -c "import uvicorn; print('uvicorn:', uvicorn.__version__)"
-
 # ============================================================
 # COPY BUILT FRONTENDS
 # ============================================================
