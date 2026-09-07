@@ -389,10 +389,10 @@ body{
     }
 }
 
-.projects-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:30px;
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-size), minmax(0, 1fr));
+    gap: 40px;
 }
 
 .project-card{
@@ -725,6 +725,7 @@ body{
     display: flex;
     gap: 16px;
     align-items: center;
+    justify-content: end;
 }
 
 .link-container a,

@@ -302,6 +302,25 @@ function switchLogo() {
 // Change every 3, 5 seconds
 let t = 3000; (function f(){ switchLogo(); setTimeout(f, t = t === 3000 ? 5000 : 3000); })();
 
+// projects grid
+const grid = document.querySelector('.projects-grid');
+const projects = grid.children.length;
+
+// Find the smallest square grid that fits all projects
+const gridSize = Math.ceil(Math.sqrt(projects));
+const totalCells = gridSize * gridSize;
+
+// Set number of columns
+grid.style.setProperty('--grid-size', gridSize);
+
+// Add empty spaces
+for (let i = projects; i < totalCells; i++) {
+    const emptyCell = document.createElement('div');
+    emptyCell.classList.add('empty-grid-cell');
+    grid.appendChild(emptyCell);
+}
+
+
 console.log(`
 ██╗   ██╗██╗███╗   ██╗ █████╗ ██╗   ██╗
 ██║   ██║██║████╗  ██║██╔══██╗╚██╗ ██╔╝
