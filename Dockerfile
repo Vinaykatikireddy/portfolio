@@ -99,6 +99,7 @@ ENV PATH="/opt/venv-ai-vuln/bin:$PATH"
 
 ENV POETRY_VIRTUALENVS_CREATE=false
 
+RUN /opt/venv-ai-vuln/bin/python -m pip install --upgrade pip setuptools wheel attrs
 RUN poetry install --only main --no-root --no-interaction --no-ansi
 
 # ============================================================
