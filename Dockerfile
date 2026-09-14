@@ -29,6 +29,10 @@ RUN git clone --depth 1 https://github.com/vinaykatikireddy/ai-web-vuln-sim.git 
 WORKDIR /app/ai-web-vuln-sim/frontend
 
 RUN npm ci
+
+ARG VITE_AWVS_BASE_URL
+ENV VITE_AWVS_BASE_URL=${VITE_AWVS_BASE_URL}
+
 RUN npm run build
 
 
