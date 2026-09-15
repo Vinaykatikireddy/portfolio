@@ -36,4 +36,3 @@ def hello():
 ```
 
 Thanks for reading!
-LOCK-PIN: IAv1GK0GBS8YGDe1ucaFXx52MDOp1eKwU8VPT4oBSbI=
