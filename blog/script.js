@@ -129,6 +129,7 @@ async function loadHome() {
             }
 
             const md = await response.text();
+            const locked = Lock.getLockHash(md) !== null;
 
             // Extract title
             const title =
@@ -138,6 +139,7 @@ async function loadHome() {
             // Generate preview text
             const body = md
                 .replace(/^# .+$/m, "")
+                .replace(/LOCK-PIN:\s*.+$/, "")
                 .replace(/[#>*`_\-\[\]\(\)!]/g, "")
                 .replace(/\n+/g, " ")
                 .trim()
@@ -145,12 +147,12 @@ async function loadHome() {
 
             // Create card
             const card = document.createElement("article");
-            card.className = "card";
+            card.className = "card" + (locked ? " locked" : "");
 
             card.innerHTML = `
-                <h3>${escapeHTML(title)}</h3>
+                <h3>${locked ? "🔒 " : ""}${escapeHTML(title)}</h3>
                 <p>${escapeHTML(body)}...</p>
-                <small>Read article →</small>
+                <small>${locked ? "Enter PIN to view →" : "Read article →"}</small>
             `;
 
             // Open article
@@ -194,7 +196,86 @@ async function loadPost(slug) {
             throw new Error("Post not found");
         }
 
-        const md = await response.text();
+        const rawMd = await response.text();
+        const lockHash = Lock.getLockHash(rawMd);
+
+        // If locked, prompt for PIN
+        if (lockHash) {
+            const overlay = document.createElement("div");
+            overlay.className = "pin-overlay";
+            overlay.innerHTML = `
+                <div class="pin-modal">
+                    <div class="pin-icon">🔒</div>
+                    <h3>This post is locked</h3>
+                    <p>Enter 4-digit PIN to view</p>
+                    <input
+                        type="password"
+                        class="pin-input"
+                        maxlength="4"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        placeholder="••••"
+                        autofocus
+                    />
+                    <div class="pin-error" style="display:none"></div>
+                    <div class="pin-actions">
+                        <button class="pin-btn pin-cancel">Cancel</button>
+                        <button class="pin-btn pin-submit">Unlock</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            const input = overlay.querySelector(".pin-input");
+            const errorEl = overlay.querySelector(".pin-error");
+            const cancelBtn = overlay.querySelector(".pin-cancel");
+            const submitBtn = overlay.querySelector(".pin-submit");
+
+            input.focus();
+
+            const pin = await new Promise((resolve) => {
+                cancelBtn.onclick = () => { overlay.remove(); resolve(null); };
+                overlay.onclick = (e) => {
+                    if (e.target === overlay) { overlay.remove(); resolve(null); }
+                };
+
+                async function trySubmit() {
+                    const val = input.value.trim();
+                    if (val.length !== 4 || !/^\d{4}$/.test(val)) {
+                        errorEl.style.display = "block";
+                        errorEl.textContent = "Enter 4 digits";
+                        input.value = "";
+                        input.focus();
+                        return;
+                    }
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = "...";
+                    const ok = await Lock.verify(val, lockHash);
+                    if (ok) {
+                        overlay.remove();
+                        resolve(val);
+                    } else {
+                        errorEl.style.display = "block";
+                        errorEl.textContent = "Incorrect PIN";
+                        input.value = "";
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = "Unlock";
+                        input.focus();
+                    }
+                }
+
+                submitBtn.onclick = trySubmit;
+                input.onkeydown = (e) => { if (e.key === "Enter") trySubmit(); };
+            });
+
+            if (pin === null) {
+                showHome();
+                return;
+            }
+        }
+
+        // Strip LOCK-PIN line before rendering
+        const md = rawMd.replace(/\n?LOCK-PIN:\s*.+$/, "");
 
         // Render Markdown
         content.className = "";

@@ -273,6 +273,123 @@ footer{
     margin-top:45px;
 }
 
+/* PIN Lock Modal */
+
+.pin-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    backdrop-filter:blur(6px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:200;
+    animation:fadeIn .2s;
+}
+
+@keyframes fadeIn{
+    from{opacity:0}
+    to{opacity:1}
+}
+
+.pin-modal{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:40px;
+    text-align:center;
+    box-shadow:var(--shadow);
+    max-width:340px;
+    width:90%;
+}
+
+.pin-icon{
+    font-size:3rem;
+    margin-bottom:12px;
+}
+
+.pin-modal h3{
+    margin-bottom:6px;
+}
+
+.pin-modal p{
+    color:var(--muted);
+    margin-bottom:24px;
+    font-size:.9rem;
+}
+
+.pin-input{
+    width:140px;
+    padding:14px;
+    font-size:1.6rem;
+    text-align:center;
+    letter-spacing:12px;
+    background:var(--surface2);
+    border:2px solid var(--border);
+    border-radius:12px;
+    color:var(--text);
+    outline:none;
+    font-family:var(--mono);
+}
+
+.pin-input:focus{
+    border-color:var(--accent);
+}
+
+.pin-error{
+    color:#ef4444;
+    font-size:.85rem;
+    margin-top:10px;
+    min-height:1.2em;
+}
+
+.pin-actions{
+    display:flex;
+    gap:12px;
+    margin-top:20px;
+    justify-content:center;
+}
+
+.pin-btn{
+    padding:10px 24px;
+    border-radius:10px;
+    border:none;
+    font-weight:600;
+    cursor:pointer;
+    font-size:.9rem;
+}
+
+.pin-cancel{
+    background:var(--surface2);
+    color:var(--muted);
+}
+
+.pin-cancel:hover{
+    color:var(--text);
+}
+
+.pin-submit{
+    background:var(--accent);
+    color:#fff;
+}
+
+.pin-submit:hover{
+    filter:brightness(1.1);
+}
+
+.pin-submit:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.card.locked{
+    border-style:dashed;
+}
+
+.card.locked small{
+    color:var(--accent2);
+}
+
 @media(max-width:700px){
 
 .hero{
