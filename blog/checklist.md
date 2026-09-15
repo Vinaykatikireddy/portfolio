@@ -216,3 +216,5 @@
 - [ ]  Financial Planning
 - [ ]  Emergency Fund
 - [ ]  Investing
+
+LOCK-PIN: fydvMtrE3troyavsuPL+tfwFDnBmFwGKHYG1+1ZyQDk=
