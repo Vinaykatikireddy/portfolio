@@ -17,6 +17,11 @@ I build projects in:
 
 This blog will document what I learn and build.
 
+## Sample CheckList
+
+- [] 1
+- [] 2
+
 ## Sample Image
 
 ![Linux](images/linux.png)
