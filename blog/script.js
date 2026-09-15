@@ -15,7 +15,8 @@ marked.use({
 
 const POSTS = [
     "hello-world",
-    "campus-placement-question-papers"
+    "campus-placement-question-papers",
+    "checklist"
 ];
 
 
