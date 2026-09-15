@@ -157,7 +157,7 @@ nav a:hover{
     background:var(--surface);
     border:1px solid var(--border);
     border-radius:var(--radius);
-    padding:45px;
+    padding:50px;
     box-shadow:var(--shadow);
 }
 
@@ -223,6 +223,29 @@ article blockquote{
 article ul,
 article ol{
     margin:20px 0 20px 30px;
+}
+
+article ul.checklist,
+article ol.checklist{
+    list-style:none;
+    padding-left:0;
+}
+
+article ul.checklist li{
+    margin-left:0;
+}
+
+article input[type="checkbox"]{
+    cursor:pointer;
+    width:16px;
+    height:16px;
+    margin-right:6px;
+    vertical-align:middle;
+    accent-color:var(--accent);
+}
+
+#content ul {
+    padding-left: 20px;
 }
 
 pre{
