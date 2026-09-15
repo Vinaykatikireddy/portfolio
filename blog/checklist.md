@@ -1,0 +1,218 @@
+- [x]  C
+- [x]  Python
+- [x]  JavaScript
+- [ ]  TypeScript
+- [x]  HTML
+- [ ]  CSS
+- [x]  SQL
+- [x]  Bash
+- [x]  Git
+- [x]  GitHub
+- [x]  Linux
+- [x]  Data Structures
+- [ ]  OOP
+- [ ]  Memory
+- [ ]  Threads
+- [ ]  Processes
+- [x]  Networking
+- [ ]  Operating Systems
+- [x]  DBMS
+- [ ]  Compiler
+- [ ]  Interpreter
+- [x]  API
+- [x]  REST
+- [x]  JSON
+- [ ]  XML
+- [ ]  Regex
+- [x]  Debugging
+- [x]  Testing
+- [ ]  Docker
+- [ ]  Kubernetes
+- [ ]  CI/CD
+- [x]  HTTP
+- [x]  HTTPS
+- [ ]  TCP
+- [ ]  UDP
+- [ ]  DNS
+- [ ]  SSH
+- [ ]  Virtualization
+- [ ]  Caching
+- [ ]  Encryption
+- [ ]  Hashing
+- [ ]  Authentication
+- [ ]  Authorization
+- [ ]  Design Patterns
+- [ ]  System Design
+- [ ]  React
+- [ ]  Node.js
+- [ ]  Express
+- [ ]  Tailwind CSS
+- [ ]  Bootstrap
+- [ ]  MongoDB
+- [x]  PostgreSQL
+- [x]  MySQL
+- [ ]  Firebase
+- [x]  Supabase
+- [ ]  Redis
+- [ ]  JWT
+- [ ]  Cookies
+- [ ]  Sessions
+- [ ]  WebSockets
+- [ ]  Axios
+- [ ]  Fetch
+- [ ]  Vite
+- [x]  Nginx
+- [ ]  Apache
+- [ ]  Hosting
+- [x]  Deployment
+- [x]  Vercel
+- [ ]  Netlify
+- [ ]  Cloudflare
+- [ ]  Responsive Design
+- [ ]  Accessibility
+- [ ]  SEO
+- [ ]  Performance
+- [ ]  Payment Gateway
+- [ ]  Email APIs
+- [ ]  CRUD
+- [x]  Pagination
+- [ ]  Search
+- [ ]  Notifications
+- [ ]  Dashboard
+- [ ]  Admin Panel
+- [ ]  CMS
+- [x]  Portfolio
+- [ ]  Documentation
+- [ ]  OpenAPI
+- [ ]  Machine Learning
+- [ ]  Deep Learning
+- [ ]  LLM
+- [ ]  Prompt Engineering
+- [ ]  RAG
+- [ ]  Vector Database
+- [ ]  Embeddings
+- [ ]  AI Agents
+- [ ]  Fine-tuning
+- [ ]  LangChain
+- [ ]  MCP
+- [ ]  TensorFlow
+- [ ]  PyTorch
+- [ ]  OpenCV
+- [ ]  Pandas
+- [ ]  NumPy
+- [ ]  Automation
+- [x]  Cybersecurity
+- [ ]  OWASP
+- [x]  SQL Injection
+- [ ]  XSS
+- [ ]  CSRF
+- [ ]  IDOR
+- [ ]  Burp Suite
+- [ ]  Nmap
+- [ ]  Wireshark
+- [ ]  Metasploit
+- [ ]  Cloud
+- [ ]  AWS
+- [ ]  Azure
+- [ ]  Google Cloud
+- [ ]  IAM
+- [ ]  EC2
+- [ ]  S3
+- [ ]  Serverless
+- [ ]  Terraform
+- [ ]  Ansible
+- [ ]  Monitoring
+- [ ]  Logging
+- [ ]  Incident Response
+- [ ]  Threat Modeling
+- [ ]  Secure Coding
+- [ ]  DevSecOps
+- [ ]  Linux Hardening
+- [ ]  Resume
+- [ ]  ATS
+- [ ]  LinkedIn
+- [ ]  Cold Email
+- [ ]  Internship
+- [ ]  Freelancing
+- [ ]  Upwork
+- [ ]  Fiverr
+- [ ]  Personal Brand
+- [ ]  Blogging
+- [ ]  YouTube
+- [ ]  SEO Writing
+- [ ]  Affiliate Marketing
+- [ ]  Digital Products
+- [ ]  SaaS
+- [ ]  Chrome Extension
+- [ ]  Mobile App
+- [ ]  Open Source
+- [ ]  Hackathon
+- [ ]  Competitive Programming
+- [ ]  LeetCode
+- [ ]  Codeforces
+- [ ]  HackerRank
+- [ ]  Certifications
+- [ ]  Communication
+- [ ]  Public Speaking
+- [ ]  Technical Writing
+- [ ]  Problem Solving
+- [ ]  Time Management
+- [ ]  Teamwork
+- [ ]  Leadership
+- [ ]  Negotiation
+- [ ]  Entrepreneurship
+- [ ]  Startup
+- [ ]  Analytics
+- [ ]  Customer Discovery
+- [ ]  Pricing
+- [ ]  Marketing
+- [ ]  Sales
+- [ ]  Interview Preparation
+- [ ]  Salary Negotiation
+- [ ]  Networking Events
+- [ ]  Remote Work
+- [ ]  Mentoring
+- [ ]  HR Round
+- [ ]  Technical Round
+- [ ]  System Design Interview
+- [ ]  Mock Interview
+- [ ]  Offer Letter
+- [ ]  Gig
+- [ ]  Proposal
+- [ ]  Client Acquisition
+- [ ]  Client Retention
+- [ ]  Domain Name
+- [ ]  Video Editing
+- [ ]  Screen Recording
+- [ ]  Voice-over
+- [ ]  Social Media
+- [ ]  X (Twitter)
+- [ ]  LinkedIn Posts
+- [ ]  Reddit Marketing
+- [ ]  Discord Community
+- [ ]  Email Marketing
+- [ ]  Sponsorship
+- [ ]  Ad Revenue
+- [ ]  Brand Deals
+- [ ]  E-books
+- [ ]  Templates
+- [ ]  Notion Templates
+- [ ]  Prompt Packs
+- [ ]  Online Courses
+- [ ]  Micro-SaaS
+- [ ]  Browser Automation
+- [ ]  API Business
+- [ ]  AI Automation
+- [ ]  AI Chatbots
+- [ ]  Workflow Automation
+- [ ]  Bug Bounty
+- [ ]  Subscription Model
+- [ ]  Conversion Rate
+- [ ]  Customer Feedback
+- [ ]  User Research
+- [ ]  Invoice
+- [ ]  Contract
+- [ ]  Tax Basics
+- [ ]  Financial Planning
+- [ ]  Emergency Fund
+- [ ]  Investing
