@@ -33,6 +33,7 @@ const year = document.getElementById("year");
 const heroTitle = document.getElementById("heroTitle");
 const heroSubtitle = document.getElementById("heroSubtitle");
 const backButton = document.querySelector(".back");
+const encryptBanner = document.getElementById("encryptBanner");
 
 
 // ============================================
@@ -186,6 +187,7 @@ async function loadHome() {
 async function loadPost(slug) {
     home.style.display = "none";
     reader.style.display = "block";
+    encryptBanner.style.display = "none";
 
     content.style.display = "block";
     content.className = "loading";
@@ -272,6 +274,7 @@ async function loadPost(slug) {
 
                 submitBtn.onclick = trySubmit;
                 input.onkeydown = (e) => { if (e.key === "Enter") trySubmit(); };
+                input.oninput = () => { if (/^\d{4}$/.test(input.value.trim())) trySubmit(); };
             });
 
             if (pin === null) {
@@ -385,6 +388,7 @@ function showHome() {
     reader.style.display = "none";
 
     home.style.display = "grid";
+    encryptBanner.style.display = "";
 
     document.title = "Vinay • Blog";
 
