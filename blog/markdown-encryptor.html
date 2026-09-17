@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Markdown Encryptor</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:system-ui,-apple-system,sans-serif;background:#09090b;color:#f4f4f5;min-height:100vh;padding:40px 20px}
+        .wrap{max-width:720px;margin:auto}
+        h1{font-size:1.8rem;margin-bottom:6px}
+        .sub{color:#a1a1aa;margin-bottom:28px;font-size:.95rem}
+        .card{background:#18181b;border:1px solid #30363d;border-radius:14px;padding:24px;margin-bottom:18px}
+        label{display:block;font-weight:600;margin-bottom:8px}
+        textarea{width:100%;min-height:260px;padding:12px;font-family:ui-monospace,monospace;font-size:.85rem;line-height:1.6;background:#27272a;border:1px solid #30363d;border-radius:10px;color:#f4f4f5;resize:vertical;outline:none}
+        textarea:focus{border-color:#4f8cff}
+        input[type="password"]{width:100%;padding:12px;font-size:1.1rem;text-align:center;letter-spacing:8px;background:#27272a;border:1px solid #30363d;border-radius:10px;color:#f4f4f5;outline:none;font-family:ui-monospace,monospace}
+        input[type="password"]:focus{border-color:#4f8cff}
+        input[type="password"]:disabled{opacity:.4;cursor:not-allowed}
+        .row{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+        .row input{flex:1;min-width:140px}
+        button{padding:12px 28px;border:none;border-radius:10px;font-weight:600;font-size:.95rem;cursor:pointer;transition:.15s}
+        .btn{background:#4f8cff;color:#fff}
+        .btn:hover{filter:brightness(1.1)}
+        .btn:disabled{opacity:.35;cursor:not-allowed}
+        .btn-ghost{background:#27272a;color:#a1a1aa}
+        .btn-ghost:hover{color:#f4f4f5}
+        .msg{margin-top:12px;padding:12px;border-radius:10px;font-size:.88rem;display:none}
+        .msg.ok{display:block;background:#052e16;color:#4ade80;border:1px solid #166534}
+        .msg.err{display:block;background:#450a0a;color:#f87171;border:1px solid #991b1b}
+        .msg.info{display:block;background:#1e3a5f;color:#60a5fa;border:1px solid #1e40af}
+        .drop{border:2px dashed #30363d;border-radius:14px;padding:36px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:14px}
+        .drop:hover,.drop.on{border-color:#4f8cff;background:#4f8cff08}
+        .drop .ic{font-size:2rem;margin-bottom:4px}
+        .drop p{color:#a1a1aa;font-size:.9rem}
+        .note{color:#a1a1aa;font-size:.82rem;line-height:1.7;margin-top:8px}
+        .hidden{display:none}
+        .fi{display:none}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Markdown Encryptor</h1>
+    <p class="sub">Encrypt any markdown file with a 4-digit PIN. The encrypted file is safe to push to GitHub. <a href="markdown-decryptor.html" style="color:#4f8cff;text-decoration:none">Need to decrypt? →</a></p>
+
+    <div class="card">
+        <div class="drop" id="drop">
+            <div class="ic">&#128196;</div>
+            <p><strong>Drop a .md file here</strong> or click to browse</p>
+        </div>
+        <input type="file" class="fi" id="fi" accept=".md">
+
+        <div class="hidden" id="sec">
+            <label>Content</label>
+            <textarea id="md" readonly></textarea>
+        </div>
+    </div>
+
+    <div class="card">
+        <label>PIN (4 digits)</label>
+        <div class="row">
+            <input type="password" id="pin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••" disabled>
+        </div>
+        <div id="msg" class="msg"></div>
+        <p class="note">The PIN becomes the encryption key. There is no recovery &mdash; lose the PIN and the content is gone.</p>
+    </div>
+
+    <div class="card hidden" id="outCard">
+        <label>Encrypted output</label>
+        <textarea id="out" readonly></textarea>
+        <div class="row" style="margin-top:12px">
+            <button class="btn-ghost" id="copy">Copy</button>
+            <button class="btn-ghost" id="dl">Download</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const ALGO="AES-GCM",IV=12,ITER=100000,SALT="blog-lock-salt";
+
+async function deriveKey(pin){
+    const e=new TextEncoder();
+    const km=await crypto.subtle.importKey("raw",e.encode(pin),"PBKDF2",false,["deriveKey"]);
+    return crypto.subtle.deriveKey({name:"PBKDF2",salt:e.encode(SALT),iterations:ITER,hash:"SHA-256"},km,{name:ALGO,length:256},false,["encrypt","decrypt"]);
+}
+
+async function encrypt(content,pin){
+    const key=await deriveKey(pin);
+    const e=new TextEncoder();
+    const iv=crypto.getRandomValues(new Uint8Array(IV));
+    const ct=await crypto.subtle.encrypt({name:ALGO,iv},key,e.encode(content));
+    const buf=new Uint8Array(iv.length+ct.byteLength);
+    buf.set(iv,0);buf.set(new Uint8Array(ct),iv.length);
+    return btoa(String.fromCharCode(...buf));
+}
+
+const drop=document.getElementById("drop");
+const fi=document.getElementById("fi");
+const sec=document.getElementById("sec");
+const md=document.getElementById("md");
+const pin=document.getElementById("pin");
+const msg=document.getElementById("msg");
+const outCard=document.getElementById("outCard");
+const out=document.getElementById("out");
+const copy=document.getElementById("copy");
+const dl=document.getElementById("dl");
+let file=null;
+
+function load(f){
+    if(!f||!f.name.endsWith(".md")){show("Select a .md file","err");return}
+    file=f;
+    pin.value="";pin.disabled=true;out.value="";outCard.classList.add("hidden");
+    sec.classList.add("hidden");md.value="";msg.className="msg";
+    const r=new FileReader();
+    r.onload=e=>{md.value=e.target.result;sec.classList.remove("hidden");pin.disabled=false;pin.focus();sec.scrollIntoView({behavior:"smooth",block:"nearest"})};
+    r.readAsText(f);
+}
+
+drop.onclick=()=>fi.click();
+drop.ondragover=e=>{e.preventDefault();drop.classList.add("on")};
+drop.ondragleave=()=>drop.classList.remove("on");
+drop.ondrop=e=>{e.preventDefault();drop.classList.remove("on");if(e.dataTransfer.files.length)load(e.dataTransfer.files[0])};
+fi.onchange=()=>{if(fi.files.length)load(fi.files[0])};
+
+function check(){
+    if(!md.value||!file||!/^\d{4}$/.test(pin.value.trim()))return false
+    return true;
+}
+pin.oninput=async()=>{
+    if(!check())return;
+    pin.disabled=true;show("Encrypting...","info");
+    try{
+        const b64=await encrypt(md.value,pin.value.trim());
+        const encrypted="ENCRYPTED-CONTENT:\n"+b64+"\n";
+        out.value=encrypted;
+        outCard.classList.remove("hidden");
+        show("Encrypted successfully","ok");
+        outCard.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }catch(e){show("Failed: "+e.message,"err")}
+    pin.disabled=false;pin.value="";pin.focus();
+};
+
+copy.onclick=()=>{
+    navigator.clipboard.writeText(out.value);
+    copy.textContent="Copied!";
+    setTimeout(()=>copy.textContent="Copy",1500);
+};
+
+dl.onclick=()=>{
+    const blob=new Blob([out.value],{type:"text/markdown"});
+    const u=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=u;a.download=file.name;a.click();
+    URL.revokeObjectURL(u);
+};
+
+function show(t,c){msg.textContent=t;msg.className="msg "+c}
+</script>
+</body>
+</html>
