@@ -9,3 +9,5 @@ venv/
 .vite
 .vscode/
 ai-web-vuln-sim/
+blog/encrypt-blog.html
+blog/decrypt-blog.html

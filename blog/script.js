@@ -130,30 +130,33 @@ async function loadHome() {
             }
 
             const md = await response.text();
-            const locked = Lock.getLockHash(md) !== null;
+            const encrypted = Lock.isEncrypted(md);
 
-            // Extract title
-            const title =
-                (md.match(/^# (.+)$/m) || [])[1] ||
-                slug.replace(/-/g, " ");
+            let title, body;
 
-            // Generate preview text
-            const body = md
-                .replace(/^# .+$/m, "")
-                .replace(/LOCK-PIN:\s*.+$/, "")
-                .replace(/[#>*`_\-\[\]\(\)!]/g, "")
-                .replace(/\n+/g, " ")
-                .trim()
-                .substring(0, 160);
+            if (encrypted) {
+                title = slug.replace(/-/g, " ");
+                body = "This post is encrypted. Enter PIN to view";
+            } else {
+                title =
+                    (md.match(/^# (.+)$/m) || [])[1] ||
+                    slug.replace(/-/g, " ");
+                body = md
+                    .replace(/^# .+$/m, "")
+                    .replace(/[#>*`_\-\[\]\(\)!]/g, "")
+                    .replace(/\n+/g, " ")
+                    .trim()
+                    .substring(0, 160);
+            }
 
             // Create card
             const card = document.createElement("article");
-            card.className = "card" + (locked ? " locked" : "");
+            card.className = "card" + (encrypted ? " locked" : "");
 
             card.innerHTML = `
-                <h3>${locked ? "🔒 " : ""}${escapeHTML(title)}</h3>
+                <h3>${encrypted ? "🔒 " : ""}${escapeHTML(title)}</h3>
                 <p>${escapeHTML(body)}...</p>
-                <small>${locked ? "Enter PIN to view →" : "Read article →"}</small>
+                <small>${encrypted ? "Enter PIN to view →" : "Read article →"}</small>
             `;
 
             // Open article
@@ -198,16 +201,16 @@ async function loadPost(slug) {
         }
 
         const rawMd = await response.text();
-        const lockHash = Lock.getLockHash(rawMd);
+        const encrypted = Lock.isEncrypted(rawMd);
+        let md;
 
-        // If locked, prompt for PIN
-        if (lockHash) {
+        if (encrypted) {
             const overlay = document.createElement("div");
             overlay.className = "pin-overlay";
             overlay.innerHTML = `
                 <div class="pin-modal">
                     <div class="pin-icon">🔒</div>
-                    <h3>This post is locked</h3>
+                    <h3>This post is encrypted</h3>
                     <p>Enter 4-digit PIN to view</p>
                     <input
                         type="password"
@@ -251,13 +254,15 @@ async function loadPost(slug) {
                     }
                     submitBtn.disabled = true;
                     submitBtn.textContent = "...";
-                    const ok = await Lock.verify(val, lockHash);
-                    if (ok) {
+
+                    try {
+                        const encryptedData = Lock.getEncryptedContent(rawMd);
+                        md = await Lock.decryptContent(encryptedData, val);
                         overlay.remove();
                         resolve(val);
-                    } else {
+                    } catch {
                         errorEl.style.display = "block";
-                        errorEl.textContent = "Incorrect PIN";
+                        errorEl.textContent = "Wrong PIN";
                         input.value = "";
                         submitBtn.disabled = false;
                         submitBtn.textContent = "Unlock";
@@ -273,10 +278,9 @@ async function loadPost(slug) {
                 showHome();
                 return;
             }
+        } else {
+            md = rawMd;
         }
-
-        // Strip LOCK-PIN line before rendering
-        const md = rawMd.replace(/\n?LOCK-PIN:\s*.+$/, "");
 
         // Render Markdown
         content.className = "";
