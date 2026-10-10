@@ -1,0 +1,11 @@
+.env
+node_modules
+frontend/dist
+__pycache__/
+*.db
+*.sqlite3
+.venv/
+venv/
+.vite
+.vscode/
+ai-web-vuln-sim/

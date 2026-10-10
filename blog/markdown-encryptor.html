@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Markdown Encryptor</title>
+    <meta name="theme-color" content="#ffffff">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                var hour = new Date().getHours();
+                var byTime = (hour >= 19 || hour < 7) ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', saved || byTime);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #ffffff;
+            --text: #17170d;
+            --text-soft: #6a6a5c;
+            --line: rgba(23, 23, 13, .18);
+            --band: #fffacd;
+            --band-text: #17170d;
+            --band-line: rgba(23, 23, 13, .22);
+            --surface: #ffffff;
+            --surface-2: rgba(23, 23, 13, .05);
+            --solid-bg: #17170d;
+            --solid-fg: #ffffff;
+            --danger: #c62828;
+            --radius: 3px;
+            --sans: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+        }
+
+        html[data-theme="dark"] {
+            color-scheme: dark;
+            --bg: #000000;
+            --text: #f7f7f0;
+            --text-soft: #a3a394;
+            --line: rgba(247, 247, 240, .2);
+            --band: #1d1d0c;
+            --band-text: #f7f7f0;
+            --band-line: rgba(247, 247, 240, .22);
+            --surface: #000000;
+            --surface-2: rgba(247, 247, 240, .07);
+            --solid-bg: #f7f7f0;
+            --solid-fg: #000000;
+            --danger: #ff6b6b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box }
+        body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; padding: 40px 20px; line-height: 1.6; -webkit-font-smoothing: antialiased }
+        ::selection { background: var(--band); color: var(--band-text) }
+        .wrap { max-width: 720px; margin: auto }
+        h1 { font-size: 1.9rem; font-weight: 800; font-stretch: 112%; letter-spacing: -.03em; margin-bottom: 6px }
+        .sub { color: var(--text-soft); margin-bottom: 28px; font-size: .95rem }
+        .sub a { color: var(--text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px }
+        .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; margin-bottom: 18px }
+        label { display: block; font-family: var(--mono); font-size: .78rem; letter-spacing: .03em; color: var(--text-soft); margin-bottom: 8px; font-weight: 500 }
+        textarea { width: 100%; min-height: 260px; padding: 12px; font-family: var(--mono); font-size: .85rem; line-height: 1.6; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); color: var(--text); resize: vertical; outline: none }
+        textarea:focus { border-color: var(--text) }
+        input[type="password"] { width: 100%; padding: 12px; font-size: 1.1rem; text-align: center; letter-spacing: 8px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); color: var(--text); outline: none; font-family: var(--mono) }
+        input[type="password"]:focus { border-color: var(--text) }
+        input[type="password"]:disabled { opacity: .4; cursor: not-allowed }
+        .row { display: flex; gap: 10px; align-items: center; margin-top: 12px; flex-wrap: wrap }
+        .row input { flex: 1; min-width: 140px }
+        button { padding: 12px 28px; border: 1px solid transparent; border-radius: var(--radius); font-family: var(--mono); font-size: .85rem; cursor: pointer; transition: transform .22s ease }
+        .btn { background: var(--solid-bg); border-color: var(--solid-bg); color: var(--solid-fg) }
+        .btn:hover { transform: translateY(-2px) }
+        .btn:disabled { opacity: .35; cursor: not-allowed; transform: none }
+        .btn-ghost { background: transparent; border-color: var(--line); color: var(--text-soft) }
+        .btn-ghost:hover { transform: translateY(-2px) }
+        .msg { margin-top: 12px; padding: 12px; border-radius: var(--radius); font-size: .88rem; display: none }
+        .msg.ok { display: block; background: var(--band); color: var(--band-text); border: 1px solid var(--band-line) }
+        .msg.err { display: block; background: var(--surface-2); color: var(--danger); border: 1px solid var(--danger) }
+        .msg.info { display: block; background: var(--surface-2); color: var(--text-soft); border: 1px dashed var(--line) }
+        .drop { border: 2px dashed var(--line); border-radius: var(--radius); padding: 36px; text-align: center; cursor: pointer; transition: transform .22s ease; margin-bottom: 14px }
+        .drop:hover { transform: translateY(-2px) }
+        .drop.on { border-color: var(--text); background: var(--surface-2) }
+        .drop .ic { font-size: 2rem; margin-bottom: 4px }
+        .drop p { color: var(--text-soft); font-size: .9rem }
+        .note { color: var(--text-soft); font-size: .82rem; line-height: 1.7; margin-top: 8px }
+        .hidden { display: none }
+        .fi { display: none }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Markdown Encryptor</h1>
+    <p class="sub">Encrypt any markdown file with a 4–10 character PIN (letters &amp; digits). <a href="markdown-decryptor.html" style="text-decoration:none">Need to decrypt? →</a></p>
+
+    <div class="card">
+        <div class="drop" id="drop">
+            <div class="ic">&#128196;</div>
+            <p><strong>Drop a .md file here</strong>, click to browse, or paste below</p>
+        </div>
+        <input type="file" class="fi" id="fi" accept=".md">
+
+        <div id="sec">
+            <label>Content</label>
+            <textarea id="md" placeholder="Paste your markdown here, or drop / upload a .md file above"></textarea>
+        </div>
+    </div>
+
+    <div class="card">
+        <label>PIN (4–10 letters &amp; digits)</label>
+        <div class="row">
+            <input type="password" id="pin" maxlength="10" pattern="[A-Za-z0-9]*" placeholder="4-10 chars" disabled>
+        </div>
+        <div id="msg" class="msg"></div>
+        <p class="note">The PIN becomes the encryption key. Type all 10 characters to encrypt automatically, or press Enter after 4 or more. There is no recovery &mdash; lose the PIN and the content is gone.</p>
+    </div>
+
+    <div class="card hidden" id="outCard">
+        <label>Encrypted output</label>
+        <textarea id="out" readonly></textarea>
+        <div class="row" style="margin-top:12px">
+            <button class="btn-ghost" id="copy">Copy</button>
+            <button class="btn-ghost" id="dl">Download</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const ALGO="AES-GCM",IV=12,ITER=100000,SALT="blog-lock-salt";
+
+async function deriveKey(pin){
+    const e=new TextEncoder();
+    const km=await crypto.subtle.importKey("raw",e.encode(pin),"PBKDF2",false,["deriveKey"]);
+    return crypto.subtle.deriveKey({name:"PBKDF2",salt:e.encode(SALT),iterations:ITER,hash:"SHA-256"},km,{name:ALGO,length:256},false,["encrypt","decrypt"]);
+}
+
+async function encrypt(content,pin){
+    const key=await deriveKey(pin);
+    const e=new TextEncoder();
+    const iv=crypto.getRandomValues(new Uint8Array(IV));
+    const ct=await crypto.subtle.encrypt({name:ALGO,iv},key,e.encode(content));
+    const buf=new Uint8Array(iv.length+ct.byteLength);
+    buf.set(iv,0);buf.set(new Uint8Array(ct),iv.length);
+    return btoa(String.fromCharCode(...buf));
+}
+
+const drop=document.getElementById("drop");
+const fi=document.getElementById("fi");
+const sec=document.getElementById("sec");
+const md=document.getElementById("md");
+const pin=document.getElementById("pin");
+const msg=document.getElementById("msg");
+const outCard=document.getElementById("outCard");
+const out=document.getElementById("out");
+const copy=document.getElementById("copy");
+const dl=document.getElementById("dl");
+let file=null;
+
+function load(f){
+    if(!f||!f.name.endsWith(".md")){show("Select a .md file","err");return}
+    file=f;
+    pin.value="";pin.disabled=true;out.value="";outCard.classList.add("hidden");
+    md.value="";msg.className="msg";
+    const r=new FileReader();
+    r.onload=e=>{md.value=e.target.result;pin.disabled=false;pin.focus();sec.scrollIntoView({behavior:"smooth",block:"nearest"})};
+    r.readAsText(f);
+}
+md.oninput=()=>{
+    const has=!!md.value.trim();
+    pin.disabled=!has;
+    if(!has)msg.className="msg";
+    out.value="";outCard.classList.add("hidden");
+};
+
+drop.onclick=()=>fi.click();
+drop.ondragover=e=>{e.preventDefault();drop.classList.add("on")};
+drop.ondragleave=()=>drop.classList.remove("on");
+drop.ondrop=e=>{e.preventDefault();drop.classList.remove("on");if(e.dataTransfer.files.length)load(e.dataTransfer.files[0])};
+fi.onchange=()=>{if(fi.files.length)load(fi.files[0])};
+
+function check(){
+    if(!md.value||!/^[A-Za-z0-9]{4,10}$/.test(pin.value.trim()))return false
+    return true;
+}
+async function runEncrypt(){
+    if(!check())return;
+    pin.disabled=true;show("Encrypting...","info");
+    try{
+        const b64=await encrypt(md.value,pin.value.trim());
+        const encrypted="ENCRYPTED-CONTENT:\n"+b64+"\n";
+        out.value=encrypted;
+        outCard.classList.remove("hidden");
+        show("Encrypted successfully","ok");
+        outCard.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }catch(e){show("Failed: "+e.message,"err")}
+    pin.disabled=false;pin.value="";pin.focus();
+}
+pin.oninput=()=>{
+    const cleaned=pin.value.replace(/[^A-Za-z0-9]/g,"");
+    if(cleaned!==pin.value)pin.value=cleaned;
+    const n=pin.value.length;
+    if(n>=4&&n<10)show("Press Enter to encrypt with a shorter PIN","info");
+    else if(n<4)msg.className="msg";
+    if(n===10)runEncrypt();
+};
+pin.onkeydown=e=>{
+    if(e.key!=="Enter")return;
+    e.preventDefault();
+    if(pin.value&&!check()){show("PIN must be 4–10 letters or digits","err");return}
+    runEncrypt();
+};
+
+copy.onclick=()=>{
+    navigator.clipboard.writeText(out.value);
+    copy.textContent="Copied!";
+    setTimeout(()=>copy.textContent="Copy",1500);
+};
+
+dl.onclick=()=>{
+    const blob=new Blob([out.value],{type:"text/markdown"});
+    const u=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=u;a.download=file?file.name:"encrypted.md";a.click();
+    URL.revokeObjectURL(u);
+};
+
+function show(t,c){msg.textContent=t;msg.className="msg "+c}
+</script>
+</body>
+</html>

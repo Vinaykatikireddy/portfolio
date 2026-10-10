@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Vinay • Blog</title>
+    <meta name="description" content="A modern markdown-powered personal blog.">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                var hour = new Date().getHours();
+                var byTime = (hour >= 19 || hour < 7) ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', saved || byTime);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div id="progress"></div>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="logo" href="/">
+                <h1>Vinay</h1>
+                <p>Thoughts, tutorials &amp; experiments.</p>
+            </a>
+            <nav>
+                <a href="/">Home</a>
+                <button class="theme-btn" id="themeToggle" aria-label="Switch to dark mode" title="Switch theme"><i class="fa-solid fa-moon"></i></button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container main">
+        <section class="hero">
+            <h2 id="heroTitle">Welcome to my blog</h2>
+            <p id="heroSubtitle">Browse articles written in Markdown with a distraction-free reading experience.</p>
+        </section>
+
+        <!-- HOME -->
+        <div id="postFilters" class="post-filters">
+            <label class="filter-chip">
+                <input type="checkbox" id="filterPublic" checked>
+                Public posts
+            </label>
+            <label class="filter-chip">
+                <input type="checkbox" id="filterLocked">
+                Locked posts
+            </label>
+        </div>
+        <p id="filterEmpty" class="filter-empty" style="display:none">No posts match the selected filters.</p>
+        <section id="home"></section>
+        <p id="encryptBanner" style="text-align:center;margin:30px 0;color:var(--text-soft);font-size:.9rem">Want to encrypt your own markdown files? <a href="markdown-encryptor.html" style="color:var(--text);text-decoration:none;font-weight:600">Markdown Encryptor →</a></p>
+
+        <!-- READER -->
+        <section id="reader">
+            <div class="reader">
+                <a class="back" href="./">
+                    ← Back to all posts
+                </a>
+                <div id="content" class="loading">
+                    Loading article...
+                </div>
+                <div id="error">
+                    <h2>404</h2>
+                    <p>Unable to load this article.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            © <span id="year"></span> Vinay • HTML + CSS + Markdown
+        </footer>
+    </div>
+
+    <script src="lock.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
