@@ -65,10 +65,11 @@ html[data-theme="dark"] {
     box-sizing: border-box;
 }
 
-@media (hover: hover) and (pointer: fine) {
-    * {
-        cursor: none
-    }
+/* only hide the native cursor while the custom one is actually drawn
+   (script.js adds .has-custom-cursor on wide, fine-pointer screens) */
+.has-custom-cursor,
+.has-custom-cursor * {
+    cursor: none
 }
 
 html {
@@ -152,7 +153,6 @@ img {
     transform: none;
     transition: opacity .55s ease, transform .55s cubic-bezier(.2, .7, .2, 1)
 }
-
 /* ---------- buttons ---------- */
 
 .btn {
@@ -209,16 +209,6 @@ img {
 
 /* ---------- cursor ---------- */
 
-.cursor-glow {
-    position: fixed;
-    width: 340px;
-    height: 340px;
-    background: radial-gradient(circle, var(--glow), transparent 70%);
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    z-index: -1
-}
-
 #cursor-trail {
     position: fixed;
     inset: 0;
@@ -261,7 +251,11 @@ img {
 
 .logo {
     position: relative;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 100%;
     color: var(--text);
     text-decoration: none;
     font-weight: 800;
@@ -398,7 +392,7 @@ img {
     align-items: center;
     gap: 10px;
     font-family: var(--mono);
-    font-size: .8rem;
+    font-size: 1.25rem;
     letter-spacing: .04em;
     color: var(--band-text);
     margin-bottom: 30px
@@ -517,15 +511,6 @@ img {
     line-height: 1
 }
 
-.sec-meta {
-    font-family: var(--mono);
-    font-size: .78rem;
-    background: var(--band);
-    color: var(--band-text);
-    padding: 7px 13px;
-    border-radius: 3px;
-    transition: background-color .3s ease, color .3s ease
-}
 
 /* ---------- about ---------- */
 
@@ -565,7 +550,7 @@ img {
 
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     border-top: 1px solid var(--line)
 }
 
@@ -848,7 +833,6 @@ img {
     background: var(--solid-bg);
     color: var(--solid-fg);
     font-size: 1rem;
-    cursor: pointer;
     opacity: 0;
     pointer-events: none;
     transform: translateY(8px);
@@ -866,7 +850,7 @@ img {
     transform: translateY(-4px)
 }
 
-/* ---------- logo glitch / terminal ---------- */
+/* ---------- logo glitch ---------- */
 
 .logo.glitch {
     animation: glitch-base 120ms infinite
@@ -930,11 +914,37 @@ img {
     100% { clip-path: inset(0 0 0 0); transform: translate(-8px, 0) skewX(10deg) }
 }
 
+.logo-toast {
+    position: fixed;
+    top: calc(var(--bar) + 10px);
+    left: max(5%, calc(50% - 590px));
+    z-index: 999;
+    padding: 9px 13px;
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--text);
+    border-radius: 3px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: .78rem;
+    letter-spacing: .03em;
+    line-height: 1.4;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity .25s cubic-bezier(.2, .7, .2, 1), transform .25s cubic-bezier(.2, .7, .2, 1)
+}
+
+.logo-toast.show {
+    opacity: 1;
+    transform: none
+}
+
 /* ---------- responsive ---------- */
 
 @media (max-width: 1040px) {
     .skills-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr))
+        grid-template-columns: repeat(3, minmax(0, 1fr))
     }
 
     .skill-card:nth-child(3n) {
@@ -1004,9 +1014,7 @@ img {
     }
 
     .hero-portrait {
-        order: -1;
-        justify-self: start;
-        width: min(48vw, 200px)
+        display: none
     }
 
     .hero-content > :only-child {
@@ -1031,7 +1039,7 @@ img {
     }
 
     .skills-grid {
-        grid-template-columns: minmax(0, 1fr)
+        grid-template-columns: repeat(2, minmax(0, 1fr))
     }
 
     .skill-card,
@@ -1065,10 +1073,6 @@ img {
         display: none
     }
 
-    .hero-portrait {
-        width: min(46vw, 160px)
-    }
-
     .ci-label {
         display: none
     }
@@ -1090,16 +1094,12 @@ img {
 }
 
 @media (max-width: 400px) {
-    .hero-portrait {
-        width: min(46vw, 140px)
-    }
-
     .hero-title {
         font-size: 2.6rem
     }
 
-    .skill-kind {
-        display: none
+    .skills-grid {
+        grid-template-columns: minmax(0, 1fr)
     }
 }
 

@@ -33,14 +33,14 @@ function syncCursorColors() {
     const bg = style.getPropertyValue("--bg").trim();
     if (text) cursorStroke = text;
     if (bg) cursorBg = bg;
-  } catch (e) {}
+  } catch (e) { }
 }
 
 const themeToggle = document.getElementById("themeToggle");
 function applyTheme(theme, persist) {
   document.documentElement.setAttribute("data-theme", theme);
   if (persist) {
-    try { localStorage.setItem("theme", theme); } catch (e) {}
+    try { localStorage.setItem("theme", theme); } catch (e) { }
   }
   if (themeToggle) {
     const icon = themeToggle.querySelector("i");
@@ -105,7 +105,7 @@ if ("IntersectionObserver" in window) {
 
 const heroSubtitle = document.querySelector(".hero-subtitle");
 if (heroSubtitle) {
-  const titles = ["Cybersecurity Researcher", "Linux Enthusiast", "Full Stack Developer", "Problem Solver", "Web developer"];
+  const titles = ["Cybersecurity Researcher", "Linux Enthusiast", "Software Developer", "Problem Solver"];
   let titleIndex = 0, charIndex = 0, deleting = false;
   function typeEffect() {
     const currentTitle = titles[titleIndex];
@@ -132,14 +132,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-const glow = document.createElement("div");
-glow.className = "cursor-glow";
-document.body.appendChild(glow);
-window.addEventListener("mousemove", e => {
-  glow.style.left = `${e.clientX}px`;
-  glow.style.top = `${e.clientY}px`;
-});
-
 const canvas = document.getElementById("cursor-trail");
 const ctx = canvas.getContext("2d");
 let w = canvas.width = window.innerWidth;
@@ -149,7 +141,7 @@ let isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 let isCursorVisible = false;
 const mouse = { x: w / 2, y: h / 2 };
 const trail = [];
-const trailLength = 35;
+const trailLength = 40;
 
 function resetTrail(x, y) {
   trail.length = 0;
@@ -160,9 +152,15 @@ resetTrail(mouse.x, mouse.y);
 function updateMobileState() {
   isMobile = window.innerWidth <= MOBILE_BREAKPOINT || window.matchMedia("(pointer: coarse)").matches;
   canvas.style.display = isMobile ? "none" : "block";
+  document.documentElement.classList.toggle("has-custom-cursor", !isMobile);
   if (isMobile) { isCursorVisible = false; ctx.clearRect(0, 0, w, h); }
 }
 updateMobileState();
+
+const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+if (coarsePointerQuery.addEventListener) {
+  coarsePointerQuery.addEventListener("change", updateMobileState);
+}
 
 window.addEventListener("resize", () => {
   w = canvas.width = window.innerWidth;
@@ -178,12 +176,6 @@ window.addEventListener("mousemove", e => {
 });
 
 document.documentElement.addEventListener("mouseleave", () => {
-  isCursorVisible = false;
-  trail.length = 0;
-  ctx.clearRect(0, 0, w, h);
-});
-
-window.addEventListener("blur", () => {
   isCursorVisible = false;
   trail.length = 0;
   ctx.clearRect(0, 0, w, h);
@@ -205,7 +197,6 @@ function animate() {
     const r = 9 * t;
     if (r < 0.4) return;
     ctx.globalAlpha = 0.1 + 0.72 * t;
-    ctx.fillStyle = cursorStroke;
     ctx.beginPath();
     ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
     ctx.fill();
@@ -240,6 +231,22 @@ if (logo) {
   }
   let t = 3000;
   (function f() { switchLogo(); setTimeout(f, t = t === 3000 ? 5000 : 3000); })();
+
+  const logoToast = document.createElement("div");
+  logoToast.className = "logo-toast";
+  logoToast.setAttribute("role", "status");
+  logoToast.setAttribute("aria-live", "polite");
+  logoToast.textContent = "something is coming soon...";
+  document.body.appendChild(logoToast);
+
+  let toastTimer;
+  logo.addEventListener("click", () => {
+    logoToast.classList.remove("show");
+    void logoToast.offsetWidth;
+    logoToast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => logoToast.classList.remove("show"), 2600);
+  });
 }
 
 const scrollTopBtn = document.getElementById("scrollTopBtn");
@@ -253,3 +260,5 @@ if (scrollTopBtn && hero) {
   });
 }
 
+// Footer year update
+document.getElementById("year").textContent = new Date().getFullYear();

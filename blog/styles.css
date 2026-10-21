@@ -93,7 +93,11 @@ body {
     background: var(--bg);
     color: var(--text);
     overflow-x: hidden;
-    -webkit-font-smoothing: antialiased
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column
 }
 
 ::selection {
@@ -150,8 +154,18 @@ img {
 }
 
 .main {
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
     padding-top: calc(var(--bar) + 32px);
-    padding-bottom: 76px
+    padding-bottom: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column
+}
+
+.page-end {
+    margin-top: auto
 }
 
 /* ---------- header (glass) ---------- */
@@ -715,8 +729,8 @@ footer {
     font-family: var(--mono);
     font-size: .8rem;
     border-top: 1px solid var(--line-soft);
-    margin-top: 52px;
-    padding-top: 26px
+    margin-top: 10px;
+    padding: 13px 13px;
 }
 
 /* ---------- PIN lock modal ---------- */

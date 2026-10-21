@@ -1,4 +1,6 @@
-# Campus Placement Question Papers (Aptitude, Verbal, Reasoning)
+# Campus Placement Question Papers
+
+Aptitude, Verbal, Reasoning
 
 ### Companies
 
