@@ -26,7 +26,7 @@ This blog will document what I learn and build.
 
 ---
 
-![Linux](/resume/files/linux.png)
+![Linux](/files/linux.png)
 
 ## Sample Code
 
